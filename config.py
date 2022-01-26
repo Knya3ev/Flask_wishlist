@@ -1,9 +1,8 @@
-
-
 class Config(object):
     """
     Common configurations
     """
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class DevelopmentConfig(Config):
