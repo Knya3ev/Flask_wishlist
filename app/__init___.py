@@ -16,6 +16,6 @@ def create_app(config_name):
     db.init_app(app)
 
     from .gift_list import gift_list as gift_list_blueprint
-    app.register_blueprint(gift_list_blueprint, url_prefix='/gift_list')
+    app.register_blueprint(gift_list_blueprint)
 
     return app

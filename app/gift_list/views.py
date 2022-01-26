@@ -3,4 +3,6 @@ from . import gift_list
 
 @gift_list.route('/')
 def index():
-    return 'Welcome to my gift list!'
+    return render_template('gift_list/index.html')
+
+
