@@ -9,10 +9,9 @@ class DevelopmentConfig(Config):
     """
     Development configurations
     """
-
     DEBUG = True
     SQLALCHEMY_ECHO = True
-
+    # FlASK_APP = 'manage.py'
 
 class ProductionConfig(Config):
     """

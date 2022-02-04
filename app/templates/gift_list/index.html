@@ -1,7 +1,39 @@
 {% extends "base.html" %}
 {% block title %}Gifts{% endblock %}
 {% block body %}
+
 <div class="container">
-    <h1>список жиланий</h1>
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {% for el in gifts %}
+                    <div class="card shadow-sm">
+                        <style>
+                                .fig {
+                                text-align: center;
+                                margin-top: 10%;
+                                }
+                        </style>
+                        <p class="fig">
+                            <img src="{{ url_for('gift_list.send_file' , filename=el.image_path) }}"
+                                alt="" width="80%" height="100%" >
+                        </p>
+                        <div class="card-body">
+                            <p class="card-text">{{el.name}}</p>
+
+                            <div class="d-flex justify-content-between align-item-center">
+                                <div class="btn-group">
+                                    <a href="{{el.url}}" class="btn btn-sm btn-outline-secondary">Перейти к товару</a>
+                                    <a href="{{el.url}}" class="btn btn-sm btn-outline-secondary">Редактировать </a>
+                                    <a href="{{el.url}}" class="btn btn-sm btn-outline-secondary">Удалить </a>
+                                </div>
+                                <small class="text-muted">{{el.price}} ₽</small>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor%}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

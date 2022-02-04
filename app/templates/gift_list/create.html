@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Gifts{% endblock %}
+{% block body %}
+<div class="container">
+    <h1>Создать новое жилание</h1>
+    <form action="" method=post enctype=multipart/form-data class="container mt-5">
+        <p>
+                <input type=file name=file  class="form-control"><br>
+            <textarea  name="name" id="name" placeholder="Название" class="form-control"></textarea>  <br>
+            <textarea  name="price" id="price" placeholder="Стоиость" class="form-control"></textarea><br>
+            <textarea  name="url" id="url" placeholder="Ссылка на товар"class="form-control"></textarea><br>
+            <input type=submit value=Опубликовать class="btn btn-success">
+        </p>
+    </form>
+</div>
+{% endblock %}
