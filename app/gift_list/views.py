@@ -41,3 +41,25 @@ def create_gift():
 @gift_list.route('/uploads/<filename>')
 def send_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
+
+
+@gift_list.route('/gift_update/<int:id>', methods=['POST', 'GET'])
+def update(id):
+    gift = Gift.query.get(id)
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            os.remove(f'{UPLOAD_FOLDER}\\{gift.image_path}')
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            gift.image_path = filename
+        gift.name = request.form['name']
+        gift.price = request.form['price']
+        gift.url = request.form['url']
+        try:
+            db.session.commit()
+            return redirect('/')
+        except:
+            return 'При редактирование произошла ошибка'
+    else:
+        return render_template('gift_list/update_gift.html', gift=gift)
