@@ -29,6 +29,9 @@ def create_app(config_name):
     migrate = Migrate(app, db)
 
     from app import models
+    from .auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint)
+
     from .gift_list import gift_list as gift_list_blueprint
     app.register_blueprint(gift_list_blueprint)
 
