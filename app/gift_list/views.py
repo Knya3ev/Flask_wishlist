@@ -63,3 +63,12 @@ def update(id):
             return 'При редактирование произошла ошибка'
     else:
         return render_template('gift_list/update_gift.html', gift=gift)
+
+
+@gift_list.route('/gift_del/<int:id>')
+def gift_del(id):
+    gift = Gift.query.get_or_404(id)
+    os.remove(f'{UPLOAD_FOLDER}\\{gift.image_path}')
+    db.session.delete(gift)
+    db.session.commit()
+    return redirect('/')

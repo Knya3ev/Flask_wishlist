@@ -11,7 +11,7 @@ class DevelopmentConfig(Config):
     """
     DEBUG = True
     SQLALCHEMY_ECHO = True
-    # FlASK_APP = 'manage.py'
+
 
 class ProductionConfig(Config):
     """
