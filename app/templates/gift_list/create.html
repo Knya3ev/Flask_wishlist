@@ -1,8 +1,10 @@
+{% import "bootstrap/utils.html" as utils %}
 {% extends "base.html" %}
-{% block title %}Gifts{% endblock %}
+{% block title %}Create wish{% endblock %}
 {% block body %}
 <div class="container">
-    <h1>Создать новое жилание</h1>
+    <h1>Создать новое желание</h1>
+    <br/>{{ utils.flashed_messages() }}
     <form action="" method=post enctype=multipart/form-data class="container mt-5">
         <p>
             <input type=file name=file  class="form-control"><br>

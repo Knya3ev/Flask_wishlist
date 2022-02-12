@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Edit{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="container">
+        <h1>My wish list</h1>
+    </div>
+    <div>
+        {% if gifts %}
+        <br>
+        <table class="table">
+            <tbody >
+            {% for el in gifts %}
+                    <tr heigth="100">
+                        <td rowspan="1" width="20%">
+                            <img src="{{ url_for('gift_list.send_file' , filename=el.image_path) }}"
+                                alt="" width="60%" height="100%" >
+                        </td>
+                        <td  style="text-align:left">
+                            <p>{{el.name}}</p>
+                            <p>{{el.price}} ₽</p>
+                            <a href="/gift_update/{{el.id}}" class="btn btn-success">Редактировать</a>
+                            <a href="/gift_del/{{el.id}}" class="btn btn-danger">Удалить</a>
+                        </td>
+
+                    </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="container">
+                <h1>У вас нет записей</h1>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

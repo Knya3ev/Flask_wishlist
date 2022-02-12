@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Gifts{% endblock %}
+{% block body %}
+
+<div class="container">
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-md-4 g-4">
+                {%if gifts %}
+                    {% for el in gifts %}
+                        <div class="card shadow-sm">
+                            <style>
+                                    .fig {
+                                    text-align: center;
+                                    margin-top: 10%;
+                                    }
+                                    .price{
+                                    bottom:20px;
+                                    text-align: center;
+                                    }
+                            </style>
+                            <p class="fig">
+                                <a href="{{el.url}}" class="btn btn-sm ">
+                                    <img src="{{ url_for('gift_list.send_file' , filename=el.image_path) }}"
+                                        alt="" width="80%" height="100%" >
+                                </a>
+                            </p>
+                            <div class="card-body">
+                                <p class="card-text">{{el.name}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between align-item-center" >
+                                <div>
+                                    <a href="{{el.url}}" class="btn btn-sm btn-outline-secondary">Перейти к товару</a>
+                                </div>
+                                <h4 class="text-muted">{{el.price}} ₽</h4>
+                            </div>
+                        </div>
+                    {% endfor%}
+                {%else%}
+                    <h1>У вас нет записей</h1>
+                {%endif%}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
