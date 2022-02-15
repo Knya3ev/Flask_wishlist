@@ -2,11 +2,50 @@
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
 {% block body %}
+
+<style>
+    .my-class {
+    border-radius:20px;
+    }
+
+
+
+
+</style>
 <div class="content-section container">
-  <div class="center">
-    <h1>Register for an account</h1>
-    <br/>
-    {{ wtf.quick_form(form) }}
-  </div>
+    <div class="bg-success p-2 text-dark bg-opacity-25 my-class container col-5">
+        <div class="text-center">
+            <h1>Sing up</h1>
+        </div>
+        <form class="form p-1" method="post" action="">
+            {{ form.csrf_token() }}
+            <div class="p-2">
+                <div class="form-group container col-10 p-1">
+                    {{form.email(class="form-control", placeholder="Email")}}
+                </div>
+                <div class="form-group container col-10 p-1">
+                    {{form.username(class="form-control", placeholder="Username")}}
+                </div>
+                <div class="form-group container col-10 p-1">
+                    {{form.first_name(class="form-control", placeholder="First name")}}
+                </div>
+                <div class="form-group container col-10 p-1">
+                    {{form.last_name(class="form-control", placeholder="Last name")}}
+                </div>
+                <div class="form-group container col-10 p-1">
+                    {{form.password(class="form-control", placeholder="Password")}}
+                </div>
+                <div class="form-group container col-10 p-1">
+                    {{form.confirm_password(class="form-control", placeholder="Confirm password")}}
+                </div>
+            </div>
+            <div class="container col-3">
+                <div class="py-1">
+                    {{form.submit(class="btn btn-primary" )}}
+                </div>
+            </div>
+        </form>
+    </div>
+
 </div>
 {% endblock %}

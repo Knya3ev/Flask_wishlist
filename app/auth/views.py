@@ -1,8 +1,7 @@
 from flask import flash, redirect, render_template, url_for
 from flask_login import login_required, login_user, logout_user
-
 from . import auth
-from .forms import RegistrationForm,LoginForm
+from .forms import RegistrationForm, LoginForm
 from ..__init___ import db
 from ..models import User
 
@@ -34,6 +33,7 @@ def register():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
+        print('валидация')
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user)
@@ -52,4 +52,3 @@ def logout():
     logout_user()
     flash('Вы успешно вышли из системы!')
     return redirect(url_for('auth.login'))
-

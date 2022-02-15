@@ -3,15 +3,50 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
 {% block body %}
-<div class="content-section">
-  <br/>
-  {{ utils.flashed_messages() }}
-  <br/>
-  <div class="center container">
-    <h1>Login to your account</h1>
-    <br/>
 
-    {{ wtf.quick_form(form) }}
-  </div>
+<style>
+    .my-class {
+    border-radius:20px;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+</style>
+<div class="content-section">
+    <br/>
+    {{ utils.flashed_messages() }}
+    <br/>
+    <div class=" container col-5">
+        <div class="bg-success p-2 text-dark bg-opacity-25 my-class">
+            <h1 class="text-center">Login to your account</h1>
+            <form class="form p-1" method="post" action="">
+                {{ form.csrf_token() }}
+                <div class="p-2">
+                    <div class="form-group container col-10 p-1">
+                        {{form.email(class="form-control", placeholder="Email")}}
+                    </div>
+                    <div class="form-group container col-10 p-1">
+                        {{form.password(class="form-control", placeholder="Password")}}
+                    </div>
+                </div>
+                <div class="container col-3">
+                    <div class="py-1">
+                        {{form.submit(class="btn btn-primary" )}}
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
 </div>
 {% endblock %}

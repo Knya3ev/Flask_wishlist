@@ -1,10 +1,10 @@
-import os
+import os, pathlib
 from flask import render_template, request, url_for, redirect, send_from_directory, flash
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from . import gift_list
 from ..__init___ import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, db
-from app.models import Gift
+from app.models import Gift, User
 
 
 @gift_list.route('/')
@@ -16,8 +16,9 @@ def index():
 
 @gift_list.route('/user_id:<int:id>/gift_list')
 def gifts_list(id):
+    user = User.query.get(id)
     gifts = Gift.query.filter_by(user_id=id).order_by(Gift.date.desc()).all()
-    return render_template('gift_list/gift_list.html', gifts=gifts)
+    return render_template('gift_list/gift_list.html', gifts=gifts, user=user)
 
 
 def allowed_file(filename):
@@ -30,22 +31,20 @@ def allowed_file(filename):
 def create_gift():
     if request.method == 'POST':
         file = request.files['file']
+        filename = 'default_gift.png'
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
-            name = request.form['name']
-            price = request.form['price']
-            url = request.form['url']
-            gift = Gift(image_path=filename, name=name, price=price, url=url, user_id=current_user.id)
-            try:
-                db.session.add(gift)
-                db.session.commit()
-            except:
-                return 'При создании произошла ошибка'
-            return redirect(f'/user_id:{current_user.id}/gift_list')
-        else:
-            flash('Нужно загрузить изображение!')
-            return render_template('gift_list/create.html')
+        name = request.form['name']
+        price = request.form['price']
+        url = request.form['url']
+        gift = Gift(image_path=filename, name=name, price=price, url=url, user_id=current_user.id)
+        try:
+            db.session.add(gift)
+            db.session.commit()
+        except:
+            return 'При создании произошла ошибка'
+        return redirect(f'/user_id:{current_user.id}/gift_list')
     else:
         return render_template('gift_list/create.html')
 
@@ -59,7 +58,7 @@ def send_file(filename):
 @login_required
 def edit_list():
     gifts = Gift.query.filter_by(user_id=current_user.id).order_by(Gift.date.desc()).all()
-    return render_template('gift_list/edit_list.html', gifts=gifts,)
+    return render_template('gift_list/edit_list.html', gifts=gifts, )
 
 
 @gift_list.route('/gift_update/<int:id>', methods=['POST', 'GET'])
@@ -69,7 +68,8 @@ def update(id):
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
-            os.remove(f'{UPLOAD_FOLDER}\\{gift.image_path}')
+            if os.path.isfile(f'{UPLOAD_FOLDER}\\{gift.image_path}'):
+                os.remove(f'{UPLOAD_FOLDER}\\{gift.image_path}')
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             gift.image_path = filename
@@ -78,6 +78,7 @@ def update(id):
         gift.url = request.form['url']
         try:
             db.session.commit()
+            flash('Товар успешно обновлен!')
             return redirect('/edit_wish_list')
         except:
             return 'При редактирование произошла ошибка'
@@ -89,7 +90,8 @@ def update(id):
 @login_required
 def gift_del(id):
     gift = Gift.query.get_or_404(id)
-    os.remove(f'{UPLOAD_FOLDER}\\{gift.image_path}')
+    if os.path.isfile(f'{UPLOAD_FOLDER}\\{gift.image_path}'):
+        os.remove(f'{UPLOAD_FOLDER}\\{gift.image_path}')
     db.session.delete(gift)
     db.session.commit()
     return redirect(f'/edit_wish_list')
