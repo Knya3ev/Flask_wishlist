@@ -2,8 +2,10 @@ import os, pathlib
 from flask import render_template, request, url_for, redirect, send_from_directory, flash
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
+
+from instance.config import UPLOAD_FOLDER
 from . import gift_list
-from ..__init___ import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, db
+from ..__init___ import ALLOWED_EXTENSIONS, db
 from app.models import Gift, User
 
 

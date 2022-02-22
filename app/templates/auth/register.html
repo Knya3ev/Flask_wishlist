@@ -1,6 +1,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
+{% import "bootstrap/utils.html" as utils %}
 {% block body %}
 
 <style>
@@ -11,9 +12,13 @@
 
 
 
+
 </style>
 <div class="content-section container">
     <div class="bg-success p-2 text-dark bg-opacity-25 my-class container col-5">
+        <br/>
+        {{ utils.flashed_messages() }}
+        <br/>
         <div class="text-center">
             <h1>Sing up</h1>
         </div>

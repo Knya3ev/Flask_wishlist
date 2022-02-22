@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Gifts{% endblock %}
 {% block body %}
+{% import "bootstrap/utils.html" as utils %}
+<div>
+    {{ utils.flashed_messages() }}
+</div>
 <div class="container d-flex flex-row bd-highlight  ">
     <style>
         .fig {
@@ -14,12 +18,16 @@
 
     </style>
     <div class="col-2 p-2 mb-2 bg-dark">
-        <img src="{{ url_for('gift_list.send_file' , filename='user.jpg') }}" alt="" width="100%">
+        {% if user.images_path %}
+            <img src="{{ url_for('gift_list.send_file' , filename=user.images_path) }}" alt="" width="100%">
+        {% else %}
+            <img src="{{ url_for('gift_list.send_file' , filename='default_user.jpg') }}" alt="" width="100%">
+        {% endif %}
     </div>
     <div class=" mb-2 bg-dark text-white p-1 col">
         <h1>{{user.first_name}} {{user.last_name}}</h1>
         {% if current_user.is_authenticated %}
-            <a href="/" class="btn btn-sm btn-outline-secondary  ">
+            <a href="{{ url_for('auth.user_update',id=current_user.id) }}" class="btn btn-sm btn-outline-secondary  ">
                 Редактировать
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      class="bi bi-gear-fill" viewBox="0 0 16 16">

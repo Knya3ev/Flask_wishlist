@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.__init___ import db, login_manager
@@ -10,14 +11,15 @@ from app.__init___ import db, login_manager
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(60), index=True, unique=True)
-    username = db.Column(db.String(60), index=True, unique=True)
-    first_name = db.Column(db.String(60), index=True)
-    last_name = db.Column(db.String(60), index=True)
-    password_hash = db.Column(db.String(128))
-    gift_id = db.relationship('Gift')
-    is_admin = db.Column(db.Boolean, default=False)
+    id = Column(Integer, primary_key=True)
+    images_path = Column(String, default=None)
+    email = Column(String(60), index=True, unique=True)
+    username = Column(String(60), index=True, unique=True)
+    first_name = Column(String(60), index=True)
+    last_name = Column(String(60), index=True)
+    password_hash = Column(String(128))
+    gift_id = relationship('Gift')
+    is_admin = Column(Boolean, default=False)
 
     @property
     def password(self):
@@ -40,7 +42,7 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return '<User: {} id: {}>'.format(self.username,self.id)
+        return '<User: {} id: {}>'.format(self.username, self.id)
 
 
 # Set up user_loader
@@ -52,14 +54,13 @@ def load_user(user_id):
 class Gift(db.Model):
     __tablename__ = 'gifts'
 
-    id = db.Column(db.Integer, primary_key=True)
-    image_path = db.Column(db.String)
-    name = db.Column(db.String(100), nullable=False)
-    price = db.Column(db.Integer, nullable=False)
-    url = db.Column(db.String, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    date = db.Column(db.DateTime, default=datetime.utcnow)
+    id = Column(Integer, primary_key=True)
+    image_path = Column(String)
+    name = Column(String(100), nullable=False)
+    price = Column(Integer, nullable=False)
+    url = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    date = Column(DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return '<Gift %r >' % self.id
-

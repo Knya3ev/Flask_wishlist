@@ -8,12 +8,14 @@ from flask_bootstrap import Bootstrap
 from config import app_config
 
 # db variable initialization
+from instance.config import UPLOAD_FOLDER
+
+
 db = SQLAlchemy()
 login_manager = LoginManager()
 
-
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-UPLOAD_FOLDER = 'C:\\progects\\Flask_wishlist\\app\\static\\img'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+# UPLOAD_FOLDER = 'C:\\progects\\Flask_wishlist\\app\\static\\img'
 
 
 def create_app(config_name):
@@ -35,6 +37,5 @@ def create_app(config_name):
 
     from .gift_list import gift_list as gift_list_blueprint
     app.register_blueprint(gift_list_blueprint)
-
 
     return app
