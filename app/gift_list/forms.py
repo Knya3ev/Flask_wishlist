@@ -1,7 +1,7 @@
 from flask import flash
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, SubmitField, ValidationError, FileField
-from wtforms.validators import DataRequired, Optional, Length, NumberRange, URL
+from wtforms import StringField, SubmitField, ValidationError, FileField, IntegerField
+from wtforms.validators import DataRequired, Optional, Length, URL, InputRequired
 
 
 class CreateGift(FlaskForm):
@@ -10,8 +10,10 @@ class CreateGift(FlaskForm):
     """
     img = FileField('Загрузить изображение', validators=[Optional()])
     name = StringField(validators=[DataRequired(),
-                                   Length(min=5, max=40, )], render_kw={"placeholder": "Название"})
-    price = StringField(validators=[DataRequired(), NumberRange(1)], render_kw={"placeholder": "Цена"})
+                                   Length(min=5, max=100, )], render_kw={"placeholder": "Название"})
+    price = IntegerField(validators=[DataRequired(),InputRequired()], render_kw={"placeholder": "Цена"})
     url = StringField(validators=[DataRequired(message='Укажите сылку чтоб другие смогли найти этот товар'),
                                   URL()], render_kw={"placeholder": "Ссылка на товар"})
     submit = SubmitField('Опубликовать')
+
+

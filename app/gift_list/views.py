@@ -1,26 +1,13 @@
 import os
 from flask import render_template, request, url_for, redirect, send_from_directory, flash
 from flask_login import login_required, current_user
+from sqlalchemy import exc
 from werkzeug.utils import secure_filename
 from instance.config import UPLOAD_FOLDER
 from . import gift_list
 from ..__init___ import ALLOWED_EXTENSIONS, db
 from app.models import Gift, User
 from .forms import CreateGift
-
-
-@gift_list.route('/')
-def index():
-    return redirect(f'/user_id:{current_user.id}/gift_list') \
-        if current_user.is_authenticated \
-        else render_template('gift_list/index.html')
-
-
-@gift_list.route('/user_id:<int:id>/gift_list')
-def gifts_list(id):
-    user = User.query.get(id)
-    gifts = Gift.query.filter_by(user_id=id).order_by(Gift.date.desc()).all()
-    return render_template('gift_list/gift_list.html', gifts=gifts, user=user)
 
 
 def allowed_file(filename):
@@ -41,12 +28,26 @@ def file_verification(user_id, filename):
     return False
 
 
+@gift_list.route('/')
+def index():
+    return redirect(f'/user_id:{current_user.id}/gift_list') \
+        if current_user.is_authenticated \
+        else render_template('gift_list/index.html')
+
+
+@gift_list.route('/user_id:<int:id>/gift_list')
+def gifts_list(id):
+    user = User.query.get(id)
+    gifts = Gift.query.filter_by(user_id=id).order_by(Gift.date.desc()).all()
+    return render_template('gift_list/gift_list.html', gifts=gifts, user=user, id=id)
+
+
 @gift_list.route('/create', methods=['GET', 'POST'])
 @login_required
 def create_gift():
     form = CreateGift()
     filename = None
-    if request.method == 'POST':
+    if form.validate_on_submit() or request.method == 'POST':
         if form.img.data and allowed_file(form.img.data.filename):
             f = form.img.data
             filename = file_verification(current_user.id, secure_filename(f.filename))
@@ -54,6 +55,7 @@ def create_gift():
                 f.save(os.path.join(UPLOAD_FOLDER, filename))
             else:
                 filename = None
+
         name = form.name.data
         price = form.price.data
         url = form.url.data
@@ -61,9 +63,11 @@ def create_gift():
         try:
             db.session.add(gift)
             db.session.commit()
+            return redirect(f'/user_id:{current_user.id}/gift_list')
         except:
-            return 'При создании произошла ошибка'
-        return redirect(f'/user_id:{current_user.id}/gift_list')
+            db.session.rollback()
+            flash('При создании произошла ошибка', 'danger')
+            return render_template('gift_list/create.html', form=form)
     else:
         return render_template('gift_list/create.html', form=form)
 
@@ -98,17 +102,19 @@ def update(id):
                 else:
                     gift.image_path = None
             else:
-                flash('Недопустимый формат! ','danger')
+                flash('Недопустимый формат! ', 'danger')
+                form.img.data = None
                 return render_template('gift_list/update_gift.html', form=form)
-        gift.name = request.form['name']
-        gift.price = request.form['price']
-        gift.url = request.form['url']
+        gift.name = form.name.data
+        gift.price = form.price.data
+        gift.url = form.url.data
         try:
             db.session.commit()
             flash('Товар успешно обновлен!')
             return redirect('/edit_wish_list')
         except:
-            return 'При редактирование произошла ошибка'
+            flash('При редактирование произошла ошибка', 'danger')
+            return render_template('gift_list/update_gift.html', form=form)
     else:
         form.img.data = gift.image_path
         form.name.data = gift.name

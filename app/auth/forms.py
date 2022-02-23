@@ -22,12 +22,12 @@ class RegistrationForm(FlaskForm):
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
-            flash('Эта электронная почта уже используется')
+            flash('Эта электронная почта уже используется','danger')
             raise ValidationError()
 
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
-            flash('Пользователь с таким ником уже существует')
+            flash('Пользователь с таким ником уже существует', 'danger')
             raise ValidationError()
 
 
