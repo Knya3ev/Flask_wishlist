@@ -11,7 +11,7 @@ from instance.config import UPLOAD_FOLDER
 from . import auth
 from .forms import RegistrationForm, LoginForm, Update
 from ..__init___ import db
-from ..gift_list.views import allowed_file
+from ..gift_list.views import allowed_file, file_verification
 from ..models import User
 
 
@@ -31,7 +31,7 @@ def register():
             db.session.commit()
             flash('Вы успешно зарегистрировались! Теперь вы можете войти на сайт!')
         except:
-            flash('Во время регистрации произошла ошибка попробуйте еще раз ')
+            flash('Во время регистрации произошла ошибка попробуйте еще раз ', 'danger')
 
         return redirect(url_for('auth.login'))
 
@@ -48,7 +48,7 @@ def login():
             return redirect(f'/user_id:{user.id}/gift_list')
 
         else:
-            flash('Неправильно введена почта или пароль!')
+            flash('Неправильно введена почта или пароль!', 'danger')
             return render_template('auth/login.html', form=form, title='Login')
     else:
         return render_template('auth/login.html', form=form, title='Login')
@@ -67,20 +67,30 @@ def user_update(id):
     form = Update()
     user = User.query.get(id)
     if form.validate_on_submit() or request.method == 'POST':
-        if form.img.data and allowed_file(form.img.data.filename):
-            if user.images_path is not None:
-                os.remove(f'{UPLOAD_FOLDER}\\{user.images_path}')
-            f = form.img.data
-            filename = secure_filename(f.filename)
-            f.save(os.path.join(UPLOAD_FOLDER, filename))
-            user.images_path = filename
+
+        if form.img.data:
+            if allowed_file(form.img.data.filename):
+                if user.images_path is not None:
+                    os.remove(f'{UPLOAD_FOLDER}\\{user.images_path}')
+                f = form.img.data
+                filename = file_verification(user.id, secure_filename(f.filename))
+                if filename:
+                    f.save(os.path.join(UPLOAD_FOLDER, filename))
+                    user.images_path = filename
+                else:
+                    user.images_path = None
+            else:
+                flash('Не допустимый формат', 'danger')
+                user.images_path = None
+                return render_template('auth/update.html', form=form, user=user)
 
         if form.password.data:
             if user.verify_password(form.old_password.data):
                 user.password = form.password.data
             else:
-                flash('Не правельно указан старый пороль ')
+                flash('Не правельно указан старый пороль ', 'danger')
                 return render_template('auth/update.html', form=form, user=user)
+
         try:
             user.email = form.email.data
             user.username = form.username.data
@@ -89,6 +99,7 @@ def user_update(id):
             db.session.commit()
             flash('изменения сохранены!')
             return redirect(url_for('gift_list.index'))
+
         except exc.IntegrityError:
             db.session.rollback()
             return render_template('auth/update.html', form=form, user=user)

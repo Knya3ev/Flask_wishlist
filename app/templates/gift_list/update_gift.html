@@ -1,19 +1,29 @@
 {% extends "base.html" %}
+{% import "bootstrap/utils.html" as utils %}
 {% block title %}Update{% endblock %}
 {% block body %}
 <div class="container">
     <h1>Редактирование</h1>
-    <form  method=post enctype=multipart/form-data class="container mt-5">
+    <form method=post enctype=multipart/form-data class="container mt-5">
         <div class="row row-cols-1 row-cols-sm-2  g-2">
-            <div>
-                <p><img src="{{ url_for('gift_list.send_file' , filename=gift.image_path) }}" alt="" width="60%"></p>
-            </div>
+            {% if form.img.data %}
+                <div>
+                    <p><img src="{{ url_for('gift_list.send_file' , filename=form.img.data) }}" alt="" width="60%"></p>
+                </div>
+            {% else %}
+                <div>
+                    <p><img src="{{ url_for('gift_list.send_file' , filename='default_gift.png') }}" alt="" width="60%"></p>
+                </div>
+            {% endif %}
             <div>
                 <p>
-                    <input type=file name=file  class="form-control"><br>
-                    <textarea  name="name" id="name" placeholder="Название" class="form-control">{{gift.name}}</textarea>  <br>
-                    <textarea  name="price" id="price" placeholder="Стоиость" class="form-control">{{gift.price}}</textarea><br>
-                    <textarea  name="url" id="url" placeholder="Ссылка на товар"class="form-control">{{gift.url}}</textarea><br>
+                    {{ utils.flashed_messages() }}<br>
+                    {{ form.csrf_token() }}
+                    <label for=""> {{ form.img.label }} </label><br>
+                    {{ form.img(class="form-control") }}<br>
+                    {{ form.name(class="form-control") }}<br>
+                    {{ form.price(class="form-control") }}<br>
+                    {{ form.url(class="form-control")}}<br>
                     <input type=submit value=Обновить class="btn btn-success">
                 </p>
             </div>

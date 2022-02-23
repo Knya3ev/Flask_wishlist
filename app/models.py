@@ -55,7 +55,7 @@ class Gift(db.Model):
     __tablename__ = 'gifts'
 
     id = Column(Integer, primary_key=True)
-    image_path = Column(String)
+    image_path = Column(String, default=None)
     name = Column(String(100), nullable=False)
     price = Column(Integer, nullable=False)
     url = Column(String, nullable=False)

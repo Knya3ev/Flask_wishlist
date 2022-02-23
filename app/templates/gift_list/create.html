@@ -1,18 +1,21 @@
 {% import "bootstrap/utils.html" as utils %}
+{% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
 {% block title %}Create wish{% endblock %}
 {% block body %}
 <div class="container">
     <div class="container col-8">
-                <br/>{{ utils.flashed_messages() }}
+        <br/>{{ utils.flashed_messages() }}
         <h1>Создать новое желание</h1>
         <form action="" method=post enctype=multipart/form-data class="container mt-5">
+            {{ form.csrf_token() }}
             <p>
-                <input type=file name=file class="form-control"><br>
-                <textarea name="name" id="name" placeholder="Название" class="form-control"></textarea> <br>
-                <textarea name="price" id="price" placeholder="Стоиость" class="form-control"></textarea><br>
-                <textarea name="url" id="url" placeholder="Ссылка на товар" class="form-control"></textarea><br>
-                <input type=submit value=Опубликовать class="btn btn-success">
+                <label for=""> {{ form.img.label }} </label><br>
+                {{ form.img(class="form-control", placeholder="") }}<br>
+                {{ form.name(class="form-control") }}<br>
+                {{ form.price(class="form-control")  }}<br>
+                {{ form.url(class="form-control")}}<br>
+                {{ form.submit(class = "btn btn-success") }}
             </p>
         </form>
     </div>
