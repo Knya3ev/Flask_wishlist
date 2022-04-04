@@ -15,7 +15,6 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-# UPLOAD_FOLDER = 'C:\\progects\\Flask_wishlist\\app\\static\\img'
 
 
 def create_app(config_name):

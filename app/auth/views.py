@@ -29,9 +29,9 @@ def register():
             # add user to the database
             db.session.add(user)
             db.session.commit()
-            flash('Вы успешно зарегистрировались! Теперь вы можете войти на сайт!')
+            flash('You have successfully registered! Now you can enter the site!')
         except:
-            flash('Во время регистрации произошла ошибка попробуйте еще раз ', 'danger')
+            flash('An error occurred while registering, please try again ', 'danger')
 
         return redirect(url_for('auth.login'))
 
@@ -48,7 +48,7 @@ def login():
             return redirect(f'/user_id:{user.id}/gift_list')
 
         else:
-            flash('Неправильно введена почта или пароль!', 'danger')
+            flash('Wrong email address or password entered!', 'danger')
             return render_template('auth/login.html', form=form, title='Login')
     else:
         return render_template('auth/login.html', form=form, title='Login')
@@ -58,7 +58,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('Вы успешно вышли из системы!')
+    flash('You have successfully logged out!')
     return redirect(url_for('auth.login'))
 
 
@@ -80,7 +80,7 @@ def user_update(id):
                 else:
                     user.images_path = None
             else:
-                flash('Не допустимый формат', 'danger')
+                flash('Invalid format', 'danger')
                 user.images_path = None
                 return render_template('auth/update.html', form=form, user=user)
 
@@ -88,7 +88,7 @@ def user_update(id):
             if user.verify_password(form.old_password.data):
                 user.password = form.password.data
             else:
-                flash('Не правельно указан старый пороль ', 'danger')
+                flash('Old password is incorrect', 'danger')
                 return render_template('auth/update.html', form=form, user=user)
 
         try:
@@ -97,7 +97,7 @@ def user_update(id):
             user.first_name = form.first_name.data
             user.last_name = form.last_name.data
             db.session.commit()
-            flash('изменения сохранены!')
+            flash('Changes saved!')
             return redirect(url_for('gift_list.index'))
 
         except exc.IntegrityError:

@@ -26,8 +26,8 @@
                 <td style="text-align:left">
                     <p>{{el.name}}</p>
                     <p>{{el.price}} ₽</p>
-                    <a href="/gift_update/{{el.id}}" class="btn btn-success">Редактировать</a>
-                    <a href="/gift_del/{{el.id}}" class="btn btn-danger">Удалить</a>
+                    <a href="/gift_update/{{el.id}}" class="btn btn-success">Editing </a>
+                    <a href="/gift_del/{{el.id}}" class="btn btn-danger">Delete</a>
                 </td>
 
             </tr>
@@ -36,7 +36,7 @@
         </table>
         {% else %}
         <div class="container">
-            <h1>У вас нет записей</h1>
+            <h1>You have no entries </h1>
         </div>
         {% endif %}
     </div>

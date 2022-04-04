@@ -1,5 +1,3 @@
-from tkinter.tix import Form
-
 from flask import flash
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, SubmitField, ValidationError, FileField
@@ -10,7 +8,7 @@ from ..models import User
 
 class RegistrationForm(FlaskForm):
     """
-    Форма для созданния акаунта пользователя
+    Form for creating a user account
     """
     email = StringField('Email', validators=[DataRequired(), Email()])
     username = StringField('Username', validators=[DataRequired()])
@@ -22,18 +20,24 @@ class RegistrationForm(FlaskForm):
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
-            flash('Эта электронная почта уже используется','danger')
+            flash('This email address is already in use', 'danger')
             raise ValidationError()
 
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
-            flash('Пользователь с таким ником уже существует', 'danger')
+            flash('A user with the username already exists', 'danger')
             raise ValidationError()
+
+    def validate_password(self, field):
+        if field.data != self.confirm_password.data:
+            flash('Passwords do not match', 'danger')
+            raise ValidationError()
+
 
 
 class LoginForm(FlaskForm):
     """
-    Форма для входа пользователей
+    User login form
     """
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])

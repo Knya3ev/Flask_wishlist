@@ -1,7 +1,6 @@
 import os
 from app.__init___ import create_app
 
-
 config_name = os.getenv('FLASK_CONFIG', default='development')
 app = create_app(config_name)
 

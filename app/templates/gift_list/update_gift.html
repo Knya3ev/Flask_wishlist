@@ -3,7 +3,7 @@
 {% block title %}Update{% endblock %}
 {% block body %}
 <div class="container">
-    <h1>Редактирование</h1>
+    <h1>Editing </h1>
     <form method=post enctype=multipart/form-data class="container mt-5">
         <div class="row row-cols-1 row-cols-sm-2  g-2">
             {% if form.img.data %}
@@ -24,7 +24,7 @@
                     {{ form.name(class="form-control") }}<br>
                     {{ form.price(class="form-control") }}<br>
                     {{ form.url(class="form-control")}}<br>
-                    <input type=submit value=Обновить class="btn btn-success">
+                    <input type=submit value=Refresh class="btn btn-success">
                 </p>
             </div>
         </div>

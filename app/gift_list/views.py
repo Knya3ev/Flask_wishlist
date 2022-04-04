@@ -1,7 +1,6 @@
 import os
 from flask import render_template, request, url_for, redirect, send_from_directory, flash
 from flask_login import login_required, current_user
-from sqlalchemy import exc
 from werkzeug.utils import secure_filename
 from instance.config import UPLOAD_FOLDER
 from . import gift_list
@@ -66,7 +65,7 @@ def create_gift():
             return redirect(f'/user_id:{current_user.id}/gift_list')
         except:
             db.session.rollback()
-            flash('При создании произошла ошибка', 'danger')
+            flash('An error occurred while creating', 'danger')
             return render_template('gift_list/create.html', form=form)
     else:
         return render_template('gift_list/create.html', form=form)
@@ -102,7 +101,7 @@ def update(id):
                 else:
                     gift.image_path = None
             else:
-                flash('Недопустимый формат! ', 'danger')
+                flash('Invalid format!', 'danger')
                 form.img.data = None
                 return render_template('gift_list/update_gift.html', form=form)
         gift.name = form.name.data
@@ -110,10 +109,10 @@ def update(id):
         gift.url = form.url.data
         try:
             db.session.commit()
-            flash('Товар успешно обновлен!')
+            flash('Product updated successfully! ')
             return redirect('/edit_wish_list')
         except:
-            flash('При редактирование произошла ошибка', 'danger')
+            flash('An error occurred while editing', 'danger')
             return render_template('gift_list/update_gift.html', form=form)
     else:
         form.img.data = gift.image_path
