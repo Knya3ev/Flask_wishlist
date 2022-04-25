@@ -9,7 +9,7 @@
 </style>
 
 
-<div class="container col-10">
+<div class="container">
     <div class="row row-cols-2 d-flex justify-content-center">
         <div class="d-flex justify-content-center p-3       ">
             <img src="{{ url_for('gift_list.send_file' , filename='home_img.png') }}" alt="" width="50%">
@@ -18,8 +18,8 @@
         <div class="container bg-success text-dark p-4 bg-opacity-25  my-class">
             <h5 class="d-flex justify-content-center">Welcome to my pet-project!</h5>
             <p class="p-2">
-                This is my first project in it, I used flask framework
-                together with Sqlaite database it supports all CRUD operations.
+                This is my first project. It was made in the flask framework
+                in conjunction with Sqlaite database. it supports all CRUD operations.
                 To learn more about my project, create an <a href="{{url_for('auth.register')}}">account</a>.
             </p>
 
